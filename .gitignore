@@ -1,0 +1,8 @@
+.idea
+.DS_Store
+build/
+coefficients.bin
+conf.json
+.gradle/
+haikuzao.ipr
+haikuzao.iws
