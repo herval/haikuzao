@@ -14,6 +14,12 @@ class CharacterIterator(lines: List[String],
                         charMap: CharacterMap,
                         alwaysStartAtNewLine: Boolean) extends DataSetIterator {
 
+  if (numExamples % batchSize != 0) {
+    throw new IllegalArgumentException("numExamples must be a multiple of batchSize")
+  }
+  if (batchSize <= 0) {
+    throw new IllegalArgumentException("Invalid batchSize (must be >0)")
+  }
 
   private val rng = new Random(12345)
 
@@ -43,21 +49,22 @@ class CharacterIterator(lines: List[String],
       (0 until num).foreach { i =>
         var startIdx = (rng.nextDouble() * maxStartIdx).toInt
         startIdx = if (alwaysStartAtNewLine) {
-          allCharacters.lastIndexOf('\n', startIdx-1)
+          allCharacters.substring(0, startIdx-1).lastIndexOf('\n')
         } else {
           startIdx
         }
         val endIdx = startIdx + exampleLength
 
-        (startIdx to endIdx).zipWithIndex.foreach { case(j, c) =>
+//        println(allCharacters.substring(startIdx, endIdx))
+
+        (startIdx until endIdx).zipWithIndex.foreach { case(j, c) =>
           val currentChar = charMap.indexOf(allCharacters(j))
           val nextChar = charMap.indexOf(allCharacters(j + 1))
           input.putScalar(Array(i, currentChar, c), 1.0)
           labels.putScalar(Array(i, nextChar, c), 1.0)
         }
-
-        examplesSoFar += 1
       }
+      examplesSoFar += 1
 
       new DataSet(input, labels)
     }

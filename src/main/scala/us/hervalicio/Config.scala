@@ -25,7 +25,7 @@ trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
 
   override lazy val iterations = 100
   override lazy val batchSize = 10
-  override lazy val exampleLength = 200
-  override lazy val examplesPerIteration = 1600
+  override lazy val exampleLength = 80
+  override lazy val examplesPerIteration = 800
   override lazy val trainingFiles = List(new File("inputs/haiku.txt"))
 }
