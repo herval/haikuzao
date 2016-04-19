@@ -6,3 +6,6 @@ conf.json
 .gradle/
 haikuzao.ipr
 haikuzao.iws
+project/project/
+project/target/
+target/
