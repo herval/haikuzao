@@ -13,12 +13,12 @@ class NumericDistribution {
     */
   def sample(distribution: Array[Double]): Int = {
     val d: Double = random.nextDouble
-    val sum = (1 to distribution.length).foldLeft(0) { case (acc, i) =>
-      val s = acc + i
-      if (d <= s) {
-        return i
-      }
-      s
+    var sum = 0.0
+    distribution.zipWithIndex.foreach { case(n, i) =>
+        sum += n
+        if(d <= sum) {
+          return i
+        }
     }
     throw new IllegalArgumentException("Distribution is invalid? d=" + d + ", sum=" + sum)
   }

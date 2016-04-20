@@ -20,7 +20,7 @@ trait NetworkConfig {
 
   val storagePath: Path
   val coefficientsFile: File
-  val networkConfigFile: File
+  val topologyFile: File
   val characterMap: CharacterMap
 
   lazy val defaultTopology = {
