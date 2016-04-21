@@ -49,7 +49,12 @@ class CharacterIterator(lines: List[String],
       (0 until num).foreach { i =>
         var startIdx = (rng.nextDouble() * maxStartIdx).toInt
         startIdx = if (alwaysStartAtNewLine) {
-          allCharacters.substring(0, startIdx-1).lastIndexOf('\n')
+          val previousNewLine = allCharacters.substring(0, startIdx-1).lastIndexOf('\n')
+          if(previousNewLine > -1) {
+            previousNewLine
+          } else {
+            startIdx
+          }
         } else {
           startIdx
         }
