@@ -3,6 +3,12 @@ package us.hervalicio
 import java.io.File
 import java.nio.file.Paths
 
+import org.deeplearning4j.nn.api.OptimizationAlgorithm
+import org.deeplearning4j.nn.conf.distribution.UniformDistribution
+import org.deeplearning4j.nn.conf.{Updater, NeuralNetConfiguration}
+import org.deeplearning4j.nn.conf.layers.{RnnOutputLayer, GravesLSTM}
+import org.deeplearning4j.nn.weights.WeightInit
+import org.nd4j.linalg.lossfunctions.LossFunctions
 import us.hervalicio.ai.lstm.{NetworkConfig, TrainingConfig}
 import us.hervalicio.ai.text.CharacterMap
 import us.hervalicio.twitter.ApiConfig
@@ -25,7 +31,32 @@ trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
 
   override lazy val iterations = 100
   override lazy val batchSize = 10
-  override lazy val exampleLength = 80
-  override lazy val examplesPerIteration = 800
+  override lazy val exampleLength = 100
+  override lazy val examplesPerIteration = 500
   override lazy val trainingFiles = List(new File("inputs/haiku.txt"))
+
+  override lazy val topology = {
+    new NeuralNetConfiguration.Builder()
+        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT).iterations(1)
+        .learningRate(0.1)
+        .rmsDecay(0.95)
+        .seed(12345)
+        .regularization(true)
+        .l2(0.001)
+        .list(3)
+        .layer(0, new GravesLSTM.Builder().nIn(characterMap.size).nOut(layerSize)
+            .updater(Updater.RMSPROP)
+            .activation("tanh").weightInit(WeightInit.DISTRIBUTION)
+            .dist(new UniformDistribution(-0.08, 0.08)).build())
+        .layer(1, new GravesLSTM.Builder().nIn(layerSize).nOut(layerSize)
+            .updater(Updater.RMSPROP)
+            .activation("tanh").weightInit(WeightInit.DISTRIBUTION)
+            .dist(new UniformDistribution(-0.08, 0.08)).build())
+        .layer(2, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation("softmax") //MCXENT + softmax for classification
+            .updater(Updater.RMSPROP)
+            .nIn(layerSize).nOut(characterMap.size).weightInit(WeightInit.DISTRIBUTION)
+            .dist(new UniformDistribution(-0.08, 0.08)).build())
+        .pretrain(false).backprop(true)
+        .build()
+  }
 }
