@@ -1,6 +1,5 @@
 package us.hervalicio.haiku
 
-import org.scalamock.proxy.ProxyMockFactory
 import org.scalamock.scalatest.MockFactory
 import org.scalatest.{FunSuite, Matchers}
 import us.hervalicio.ai.lstm.Network
@@ -31,6 +30,5 @@ class WriterSpec extends FunSuite with Matchers with MockFactory {
       writer.sample().get == "three\nline\nstuff\n"
     )
   }
-
 
 }

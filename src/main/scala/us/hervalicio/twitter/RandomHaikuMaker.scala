@@ -11,11 +11,13 @@ class RandomHaikuMaker(api: Api, network: Network) extends Runnable {
 
   override def run() = {
     while (true) {
-      println(
-        writer.sample.map(q => api.post(q))
-      )
-      println("Entering deep slumber for some time...")
-      Thread.sleep(60.minutes.toMillis)
+      writer.sample.foreach { haiku =>
+        println(
+          api.post(haiku + "\n#haiku")
+        )
+        println("Entering deep slumber for some time...")
+        Thread.sleep(2.hours.toMillis)
+      }
     }
   }
 

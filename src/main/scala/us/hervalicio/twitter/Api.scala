@@ -20,25 +20,5 @@ trait Api extends ApiConfig {
   def post(message: String) = {
     twitter.updateStatus(message)
   }
-
-  def followees: Array[Long] = {
-    twitter.getFollowersIDs(-1).getIDs
-  }
-
-  def following: Array[Long] = {
-    twitter.getFriendsIDs(-1).getIDs
-  }
-
-  def follow(id: Long) = {
-    twitter.createFriendship(id)
-  }
-
-  def unfollow(id: Long) = {
-    twitter.destroyFriendship(id)
-  }
-
-  def search(query: String): List[Status] = {
-    twitter.search(new Query(query)).getTweets.toList
-  }
-
+  
 }
