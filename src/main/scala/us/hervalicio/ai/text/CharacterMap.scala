@@ -5,7 +5,7 @@ import java.util.Random
 // Store valid characters is a map for later use in vectorization
 class CharacterMap(charSet: Seq[Char]) {
 
-  private val rng = new Random(12345)
+  private val rng = new Random()
   private val charToIdxMap = charSet.zipWithIndex.toMap
 
   def charAt(idx: Int) = charSet(idx)

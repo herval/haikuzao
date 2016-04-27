@@ -31,6 +31,8 @@ trait Loading extends NetworkHolder with NetworkConfig {
     val newParams = Nd4j.read(dis)
     dis.close()
 
+    println(s"Loading network from disk (${topologyFile.getAbsolutePath})")
+
     val model = new MultiLayerNetwork(confFromJson)
     model.init()
     model.setParameters(newParams)

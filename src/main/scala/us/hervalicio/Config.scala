@@ -17,10 +17,10 @@ import us.hervalicio.twitter.ApiConfig
   * Created by herval on 10/31/15.
   */
 trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
-  override lazy val storagePath = Paths.get("networks/200_neurons")
+  override lazy val storagePath = Paths.get("networks/150_neurons")
   override lazy val coefficientsFile = new File(storagePath.toFile, "coefficients_network.bin")
   override lazy val topologyFile = new File(storagePath.toFile, "conf_network.json")
-  override lazy val layerSize = 200
+  override lazy val layerSize = 150
 
   override lazy val consumerKey = System.getenv("TWITTER_CONSUMER_KEY")
   override lazy val consumerSecret = System.getenv("TWITTER_CONSUMER_SECRET")
@@ -32,7 +32,7 @@ trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
   override lazy val iterations = 100
   override lazy val batchSize = 10
   override lazy val exampleLength = 100
-  override lazy val examplesPerIteration = 500
+  override lazy val examplesPerIteration = 200
   override lazy val trainingFiles = List(new File("inputs/haiku.txt"))
 
   override lazy val topology = {

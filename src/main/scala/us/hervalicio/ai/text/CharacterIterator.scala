@@ -21,7 +21,7 @@ class CharacterIterator(lines: List[String],
     throw new IllegalArgumentException("Invalid batchSize (must be >0)")
   }
 
-  private val rng = new Random(12345)
+  private val rng = new Random()
 
   private val allCharacters = {
     //Load lines and convert contents to a single char[]
@@ -48,7 +48,7 @@ class CharacterIterator(lines: List[String],
       // of the file in the same minibatch
       (0 until num).foreach { i =>
         var startIdx = (rng.nextDouble() * maxStartIdx).toInt
-        startIdx = if (alwaysStartAtNewLine) {
+        startIdx = if (alwaysStartAtNewLine && startIdx > 1) {
           val previousNewLine = allCharacters.substring(0, startIdx-1).lastIndexOf('\n')
           if(previousNewLine > -1) {
             previousNewLine

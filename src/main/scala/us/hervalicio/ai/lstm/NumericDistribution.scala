@@ -3,7 +3,7 @@ package us.hervalicio.ai.lstm
 import java.util.Random
 
 class NumericDistribution {
-  private val random = new Random(12345)
+  private val random = new Random()
 
   /**
     * Given a probability distribution over discrete classes, sample from the distribution
