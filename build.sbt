@@ -11,3 +11,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.6" % "test",
   "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
 )
+
+mainClass in Compile := Some("us.hervalicio.TwitterBot")
+
+packageArchetype.java_application
