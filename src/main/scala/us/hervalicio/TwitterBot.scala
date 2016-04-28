@@ -10,6 +10,8 @@ object TwitterBot extends App {
 
   println("Starting bot...")
 
-  new Thread(new RandomHaikuMaker(twitterApi, poet)).start()
+  new Thread(
+    new RandomHaikuMaker(twitterApi, poet, poet.trainingDataLoader)
+  ).start()
 
 }

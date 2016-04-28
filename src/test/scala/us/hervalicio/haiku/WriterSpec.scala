@@ -10,12 +10,16 @@ import us.hervalicio.ai.lstm.Network
 class WriterSpec extends FunSuite with Matchers with MockFactory {
 
   val fakeNetwork = stub[Network]
-  val writer = new Writer(fakeNetwork)
+  val writer = new Writer(fakeNetwork, Set("three", "line", "stuff"))
 
   test("Generate haikus") {
     val strings = List(
       """
         |foo
+        |
+        |this
+        |will be ignored
+        |because unknown words
         |
         |three
         |line
@@ -24,7 +28,7 @@ class WriterSpec extends FunSuite with Matchers with MockFactory {
         |ok?
       """.stripMargin
     )
-    (fakeNetwork.sample _).when(140, 1).returns(strings)
+    (fakeNetwork.sample _).when(300, 1).returns(strings)
 
     assert(
       writer.sample().get == "three\nline\nstuff\n"
