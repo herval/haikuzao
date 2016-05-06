@@ -9,26 +9,26 @@ class Writer(network: Network, dictionary: Set[String]) {
 
   // sample a Haiku from the network
   def sample(): Option[String] = {
-    val lines = network.sample(300, 1)
+    val lines = network.sample(800, 1)
     lines.headOption.flatMap { raw =>
       splitInHaikus(raw)
           .filter(l => l.count(_ == '\n') == 3) // only 3-lines...
           .map { words => (countWeirdWords(words), words) }
           .sortBy(_._1) // sorted by as few weird words as possible
           .headOption.map(_._2)
-
     }
   }
 
   private def splitInHaikus(raw: String): List[String] = {
     raw.split("\n").foldLeft(List[String]()) { case (lists, line) =>
-      line match {
-        case _ if line.isEmpty => lists ++ List("")
-        case _ => lists.dropRight(1) ++ List(lists.lastOption.getOrElse("") + line + "\n")
+      if (line.isEmpty) {
+        lists ++ List("") // a new haiku appears!
+      } else {
+        lists.dropRight(1) ++ List(lists.lastOption.getOrElse("") + line + "\n") // append line to the last haiku
       }
     }
   }
 
-  private def countWeirdWords(words: String) = words.split(" ").count { w => !dictionary.contains(w) }
+  private def countWeirdWords(words: String): Int = words.split(" ").count { w => !dictionary.contains(w) }
 
 }
