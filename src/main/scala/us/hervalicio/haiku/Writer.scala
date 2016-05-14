@@ -7,15 +7,18 @@ import us.hervalicio.ai.lstm.Network
   */
 class Writer(network: Network, dictionary: Set[String]) {
 
+  private val sequenceSize = 800
+  private val maxTries = 4
+
   // sample a Haiku from the network
   def sample(): Option[String] = {
-    network.sample(800, 1).headOption.flatMap { raw =>
+    network.sample(sequenceSize, maxTries).flatMap { raw =>
       splitInHaikus(raw)
           .filter(l => l.count(_ == '\n') == 3) // only 3-lines...
           .map { words => (countWeirdWords(words), words) }
-          .sortBy(_._1) // sorted by as few weird words as possible
-          .headOption.map(_._2)
-    }
+          .sortBy(_._1) // as few weird words as possible
+          .map(_._2)
+    }.headOption
   }
 
   private def splitInHaikus(raw: String): List[String] = {
@@ -28,6 +31,12 @@ class Writer(network: Network, dictionary: Set[String]) {
     }
   }
 
-  private def countWeirdWords(words: String): Int = words.split(" ").count { w => !dictionary.contains(w) }
+  private def countWeirdWords(words: String): Int = {
+    words
+        .replace("\n", " ")
+        .split(" ")
+        .filterNot(_.isEmpty)
+        .count { w => !dictionary.contains(w) }
+  }
 
 }

@@ -28,7 +28,7 @@ class WriterSpec extends FunSuite with Matchers with MockFactory {
         |ok?
       """.stripMargin
     )
-    (fakeNetwork.sample _).when(800, 1).returns(strings)
+    (fakeNetwork.sample _).when(800, 4).returns(strings)
 
     assert(
       writer.sample().get == "three\nline\nstuff\n"

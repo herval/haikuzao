@@ -14,7 +14,7 @@ class RandomHaikuMaker(api: Api, network: Network, trainingData: Loader) extends
     while (true) {
       writer.sample.foreach { haiku =>
         println(
-          api.post(haiku + "\n#haiku")
+          api.post(haiku + "\n#haiku #micropoetry")
         )
         println("Entering deep slumber for some time...")
         Thread.sleep(2.hours.toMillis)
