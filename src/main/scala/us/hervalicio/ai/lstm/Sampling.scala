@@ -14,18 +14,22 @@ trait Sampling extends NetworkHolder {
     sampleFromNetwork(None, chars, numSamples)
   }
 
-  private def sampleFromNetwork(start: Option[String], chars: Int, samples: Int): List[String] = {
+  private def sampleFromNetwork(
+      start: Option[String], chars: Int, samples: Int): List[String] = {
     val initialization = start.getOrElse(characterMap.sampleChar().toString)
 
-    val initializationInput = Nd4j.zeros(samples, characterMap.size, initialization.length)
-    initialization.zipWithIndex.foreach { case (c, i) =>
-      val idx = characterMap.indexOf(c)
-      (0 until samples).foreach { j =>
-        initializationInput.putScalar(Array(j, idx, i), 1.0f)
-      }
+    val initializationInput =
+      Nd4j.zeros(samples, characterMap.size, initialization.length)
+    initialization.zipWithIndex.foreach {
+      case (c, i) =>
+        val idx = characterMap.indexOf(c)
+        (0 until samples).foreach { j =>
+          initializationInput.putScalar(Array(j, idx, i), 1.0f)
+        }
     }
 
-    val buffers: List[StringBuffer] = List.fill(samples)(new StringBuffer(initialization))
+    val buffers: List[StringBuffer] =
+      List.fill(samples)(new StringBuffer(initialization))
 
     val distribution = new NumericDistribution
 
@@ -40,7 +44,6 @@ trait Sampling extends NetworkHolder {
       val nextInput = Nd4j.zeros(samples, characterMap.size)
 
       (0 until samples).map { s =>
-
         val outputProbDistribution = (0 until characterMap.size).map { j =>
           output.getDouble(s, j)
         }.toArray
@@ -56,5 +59,4 @@ trait Sampling extends NetworkHolder {
 
     buffers.map(_.toString)
   }
-
 }

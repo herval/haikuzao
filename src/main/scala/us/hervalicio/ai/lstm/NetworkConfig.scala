@@ -29,5 +29,4 @@ trait NetworkConfig {
     model.init()
     model
   }
-
 }

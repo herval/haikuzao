@@ -17,16 +17,17 @@ trait Loading extends NetworkHolder with NetworkConfig {
       load()
     } catch {
       case e: Exception => {
-        println(s"Couldn't load - setting up a new network: ${e.getMessage}")
-        defaultTopology
-      }
+          println(s"Couldn't load - setting up a new network: ${e.getMessage}")
+          defaultTopology
+        }
     }
   }
 
   private def load(): MultiLayerNetwork = {
     storagePath.toFile.mkdirs()
 
-    val confFromJson = MultiLayerConfiguration.fromJson(FileUtils.readFileToString(topologyFile))
+    val confFromJson = MultiLayerConfiguration.fromJson(
+        FileUtils.readFileToString(topologyFile))
     val dis = new DataInputStream(new FileInputStream(coefficientsFile))
     val newParams = Nd4j.read(dis)
     dis.close()
@@ -45,7 +46,7 @@ trait Loading extends NetworkHolder with NetworkConfig {
     dos.flush()
     dos.close()
 
-    FileUtils.writeStringToFile(topologyFile, model.getLayerWiseConfigurations.toJson)
+    FileUtils.writeStringToFile(
+        topologyFile, model.getLayerWiseConfigurations.toJson)
   }
-
 }

@@ -17,15 +17,18 @@ import us.hervalicio.twitter.ApiConfig
   * Created by herval on 10/31/15.
   */
 trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
-  override lazy val storagePath = Paths.get("networks/200_neurons")
-  override lazy val coefficientsFile = new File(storagePath.toFile, "coefficients_network.bin")
-  override lazy val topologyFile = new File(storagePath.toFile, "conf_network.json")
-  override lazy val layerSize = 200
+  override lazy val storagePath = Paths.get("networks/120_neurons")
+  override lazy val coefficientsFile = new File(
+      storagePath.toFile, "coefficients_network.bin")
+  override lazy val topologyFile = new File(
+      storagePath.toFile, "conf_network.json")
+  override lazy val layerSize = 120
 
   override lazy val consumerKey = System.getenv("TWITTER_CONSUMER_KEY")
   override lazy val consumerSecret = System.getenv("TWITTER_CONSUMER_SECRET")
   override lazy val accessToken = System.getenv("TWITTER_ACCESS_TOKEN")
-  override lazy val accessTokenSecret = System.getenv("TWITTER_ACCESS_TOKEN_SECRET")
+  override lazy val accessTokenSecret =
+    System.getenv("TWITTER_ACCESS_TOKEN_SECRET")
 
   override lazy val characterMap = CharacterMap.minimal
 
@@ -37,32 +40,42 @@ trait Config extends ApiConfig with NetworkConfig with TrainingConfig {
 
   override lazy val topology = {
     new NeuralNetConfiguration.Builder()
-        .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
-        .iterations(1)
-        .learningRate(0.1)
-        .rmsDecay(0.95)
-//        .seed(12345)
-        .regularization(true)
-        .l2(0.001)
-        .list(4)
-        .layer(0, new GravesLSTM.Builder().nIn(characterMap.size).nOut(layerSize)
-            .updater(Updater.RMSPROP)
-            .activation("tanh").weightInit(WeightInit.DISTRIBUTION)
-            .dist(new UniformDistribution(-0.08, 0.08)).build())
-        .layer(1, new GravesLSTM.Builder().nIn(layerSize).nOut(layerSize)
-            .updater(Updater.RMSPROP)
-            .activation("tanh").weightInit(WeightInit.DISTRIBUTION)
-            .dist(new UniformDistribution(-0.08, 0.08)).build())
-        .layer(2, new GravesLSTM.Builder().nIn(layerSize).nOut(layerSize)
-            .updater(Updater.RMSPROP)
-            .activation("tanh").weightInit(WeightInit.DISTRIBUTION)
-            .dist(new UniformDistribution(-0.08, 0.08)).build())
-        .layer(3, new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT).activation("softmax") //MCXENT + softmax for classification
-            .updater(Updater.RMSPROP)
-            .nIn(layerSize).nOut(characterMap.size).weightInit(WeightInit.DISTRIBUTION)
-            .dist(new UniformDistribution(-0.08, 0.08)).build())
-        .pretrain(false)
-        .backprop(true)
-        .build()
+      .optimizationAlgo(OptimizationAlgorithm.STOCHASTIC_GRADIENT_DESCENT)
+      .iterations(1)
+      .learningRate(0.002)
+      .rmsDecay(0.97)
+      .regularization(true)
+      .l2(0.001)
+      .list(4)
+      .layer(0,
+             new GravesLSTM.Builder()
+               .nIn(characterMap.size)
+               .nOut(layerSize)
+               .updater(Updater.RMSPROP)
+               .activation("tanh")
+               .weightInit(WeightInit.DISTRIBUTION)
+               .dist(new UniformDistribution(-0.08, 0.08))
+               .build())
+      .layer(1,
+             new GravesLSTM.Builder()
+               .nIn(layerSize)
+               .nOut(layerSize)
+               .updater(Updater.RMSPROP)
+               .activation("tanh")
+               .weightInit(WeightInit.DISTRIBUTION)
+               .dist(new UniformDistribution(-0.08, 0.08))
+               .build())
+      .layer(2,
+             new RnnOutputLayer.Builder(LossFunctions.LossFunction.MCXENT)
+               .activation("softmax") //MCXENT + softmax for classification
+               .updater(Updater.RMSPROP)
+               .nIn(layerSize)
+               .nOut(characterMap.size)
+               .weightInit(WeightInit.DISTRIBUTION)
+               .dist(new UniformDistribution(-0.08, 0.08))
+               .build())
+      .pretrain(false)
+      .backprop(true)
+      .build()
   }
 }

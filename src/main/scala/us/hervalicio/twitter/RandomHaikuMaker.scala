@@ -6,7 +6,8 @@ import us.hervalicio.haiku.Writer
 
 import scala.concurrent.duration._
 
-class RandomHaikuMaker(api: Api, network: Network, trainingData: Loader) extends Runnable {
+class RandomHaikuMaker(api: Api, network: Network, trainingData: Loader)
+    extends Runnable {
 
   val writer = new Writer(network, trainingData.words)
 
@@ -14,12 +15,11 @@ class RandomHaikuMaker(api: Api, network: Network, trainingData: Loader) extends
     while (true) {
       writer.sample.foreach { haiku =>
         println(
-          api.post(haiku + "\n#haiku #micropoetry")
+            api.post(haiku + "\n#haiku #micropoetry")
         )
         println("Entering deep slumber for some time...")
         Thread.sleep(2.hours.toMillis)
       }
     }
   }
-
 }
