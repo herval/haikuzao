@@ -1,6 +1,8 @@
 Haikuzao
 ========
 
+# This project moved [here](https://github.com/herval/creative_machines)
+
 The Tao of Haiku.
 
 A Neural Network that generates unlimited Haiku on Twitter.
